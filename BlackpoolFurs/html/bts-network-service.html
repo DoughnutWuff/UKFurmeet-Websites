@@ -1,0 +1,143 @@
+<!DOCTYPE html5>
+<head>
+  <title id="title">Blackpool Transport | Network Status</title>
+</head>
+<style>
+  @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700');
+  body {
+    font-family: "Open Sans", sans-serif!important;
+    font-weight: 400!important;
+    letter-spacing: -1px!important;
+    overflow: scroll;
+    overflow-x: hidden;
+  }
+  ::-webkit-scrollbar {
+    width: 0px;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+  }
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -2px!important;
+    font-weight: normal;
+  }
+  .wrapper {
+    position: absolute;
+    margin: -8px;
+    width: 100vw;
+    height: 100vh;
+  }
+  .topBar {
+    position: absolute;
+    margin: 0;
+    width: 100vw;
+    height: 64px;
+    background: #53565a;
+  }
+  .topTitle {
+    position: absolute;
+    margin: 0;
+    width: 100vw;
+    height: 64px;
+    line-height: 64px;
+    text-align: center;
+    color: white;
+  }
+  .separator {
+    position: absolute;
+    margin: 0;
+    z-index: 1;
+    width: 100vw;
+    height: 4px;
+    top: 64px;
+    background: #F3EA5D;
+  }
+  #logo {
+    position: absolute;
+  	margin: -8px;
+  	margin-left: -16px;
+  	top: -48px;
+  	width: 223px;
+  	height: auto;
+  	transform: rotate(-10deg);
+  	opacity: 0.2;
+    z-index: 0;
+  }
+  #cards {
+    position: absolute;
+    margin: auto;
+    width: 100vw;
+    top: 96px;
+  }
+  .card {
+    display: block;
+    width: 95vw;
+    margin: auto;
+    height: 72px;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    margin-bottom: 25px;
+  }
+  #cardTitle {
+    position: absolute;
+    margin-top: 8px;
+    width: 95vw;
+    text-align: center;
+    font-weight: 700;
+    color: #53565a;
+  }
+  #cardSubtitle {
+    position: absolute;
+    margin-top: 40px;
+    width: 95vw;
+    text-align: center;
+    color: #849295;
+  }
+</style>
+<body>
+  <div class="wrapper">
+    <div class="topBar">
+      <img src="/img/btslogo.png" id="logo">
+      <h1 class="topTitle">Blackpool Transport | Network Status</h1>
+    </div>
+    <div class="separator"></div>
+    <div class="bottom">
+      <div id="cards">
+
+      </div>
+    </div>
+  </div>
+  <script> <!--https://bts.arcticapi.com/network/disruptions-->
+    var getJSON = function(url, callback) {
+  		var xhr = new XMLHttpRequest();
+  		xhr.open('GET', url, true);
+  		xhr.responseType = 'json';
+  		xhr.onload = function() {
+  		  var status = xhr.status;
+  		  if (status === 200) {
+  			callback(null, xhr.response);
+  		  } else {
+  			callback(status, xhr.response);
+  		  }
+  		};
+  		xhr.send();
+  	};
+  	function getInfo() {
+  		getJSON("https://bts.arcticapi.com/network/disruptions",
+  		function(err, data) {
+        if (err !== null) {
+    			alert('Something went wrong: ' + err);
+  		  } else {
+          var bts = data["_embedded"]["alert"];
+          for(i = bts.length; i > 0; i--) {
+            document.getElementById("cards").innerHTML = document.getElementById("cards").innerHTML + `
+            <div class="card">
+              <h2 id="cardTitle">`+bts[i-1]["header"]+`</h2>
+              <h3 id="cardSubtitle">`+bts[i-1]["activePeriods"][0]["time_range_display"]+` | <a target="_blank" href="https://www.blackpooltransport.com/service-updates">More Info</a></h3>
+            </div>
+            `
+          }
+        }
+      }
+    )}
+    getInfo();
+  </script>
+</body>

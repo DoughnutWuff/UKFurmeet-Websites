@@ -1,0 +1,12 @@
+html {
+  background: #343a40;
+}
+.logo {
+  position: absolute;
+  margin-top: 50vh;
+  margin-left: 50vw;
+  width: 75vh;
+  height: 75vh;
+  top: -37.5vh;
+  left: -37.5vh;
+}
